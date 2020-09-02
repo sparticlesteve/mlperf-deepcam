@@ -257,6 +257,13 @@ def main(pargs):
     start_step = steptens.cpu().numpy()[0]
     start_epoch = steptens.cpu().numpy()[1]
 
+    # Set multiprocessing startup method.
+    # Default `fork` method doesn't work with multiple MPI ranks on CPU.
+    # You can change to use `spawn` or `forkserver` method as below, though
+    # there will be warnings about ports being already in use.
+    #import torch
+    #torch.multiprocessing.set_start_method('spawn')
+
     # Set up the data feeder
     # train
     train_dir = os.path.join(root_dir, "train")
