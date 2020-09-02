@@ -10,10 +10,6 @@
 # Setup software environment
 module load cgpu
 module load pytorch/v1.6.0-gpu
-#conda activate mlperf_deepcam
-#module load pytorch/v1.4.0
-#export PROJ_LIB=/global/homes/t/tkurth/.conda/envs/mlperf_deepcam/share/basemap
-#export PYTHONPATH=/global/homes/t/tkurth/.conda/envs/mlperf_deepcam/lib/python3.7/site-packages:${PYTHONPATH}
 
 # Job configuration
 rankspernode=8
@@ -48,7 +44,4 @@ srun -u -N ${SLURM_NNODES} -n ${totalranks} -c $(( 80 / ${rankspernode} )) --cpu
      --save_frequency 400 \
      --max_epochs 200 \
      --amp_opt_level O1 \
-     --enable_wandb \
-     --wandb_certdir $HOME \
      --local_batch_size 2 |& tee -a ${output_dir}/train.out
-     #--max_validation_steps 50 \
