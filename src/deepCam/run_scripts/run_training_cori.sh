@@ -1,9 +1,8 @@
 #!/bin/bash
-#SBATCH -A dasrepo
-#SBATCH -J train_cam5
-#SBATCH -t 08:00:00
+#SBATCH -J deepcam-cori
 #SBATCH -C knl
 #SBATCH -q regular
+#SBATCH -t 08:00:00
 #SBATCH -S 2
 
 # The MIT License (MIT)
@@ -28,7 +27,6 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Setup software
-conda activate mlperf_deepcam
 module load pytorch/v1.6.0
 
 # Job configuration
