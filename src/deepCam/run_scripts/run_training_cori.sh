@@ -27,33 +27,29 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#load stuff
+# Setup software
 conda activate mlperf_deepcam
-module load pytorch/v1.4.0
-export PROJ_LIB=/global/homes/t/tkurth/.conda/envs/mlperf_deepcam/share/basemap
-export PYTHONPATH=/global/homes/t/tkurth/.conda/envs/mlperf_deepcam/lib/python3.7/site-packages:${PYTHONPATH}
+module load pytorch/v1.6.0
 
-#ranks per node
+# Job configuration
 rankspernode=1
 totalranks=$(( ${SLURM_NNODES} * ${rankspernode} ))
-
-#parameters
-run_tag="deepcam_prediction_run1-cori"
+run_tag="deepcam_cori_000"
 data_dir_prefix="/global/cscratch1/sd/tkurth/data/cam5_data/All-Hist"
-output_dir="/global/cscratch1/sd/tkurth/data/cam5_runs/${run_tag}"
+output_dir=$SCRATCH/deepcam/results/$run_tag
 
-#create files
+# Create files
 mkdir -p ${output_dir}
 touch ${output_dir}/train.out
 
-#run training
+# Run training
 srun -u -N ${SLURM_NNODES} -n ${totalranks} -c $(( 256 / ${rankspernode} )) --cpu_bind=cores \
      python ../train_hdf5_ddp.py \
      --wireup_method "mpi" \
      --run_tag ${run_tag} \
      --data_dir_prefix ${data_dir_prefix} \
      --output_dir ${output_dir} \
-     --max_inter_threads 0 \
+     --max_inter_threads 2 \
      --model_prefix "classifier" \
      --optimizer "AdamW" \
      --start_lr 1e-3 \
