@@ -80,7 +80,7 @@ def init(method):
                                 world_size = world_size)
         
     elif method == "nccl-slurm":
-        rank = int(os.getenv("PMIX_RANK"))
+        rank = int(os.getenv("SLURM_PROCID"))
         world_size = int(os.getenv("SLURM_NTASKS"))
         address = os.getenv("SLURM_LAUNCH_NODE_IPADDR")
         port = "29500"
