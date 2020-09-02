@@ -63,7 +63,7 @@ except ImportError:
 
 #vis stuff
 from PIL import Image
-from utils import visualizer as vizc
+#from utils import visualizer as vizc
 
 #DDP
 import torch.distributed as dist
@@ -304,8 +304,8 @@ def main(pargs):
         logger.log_event(key = "invalid_submission")
     
     #for visualization
-    if visualize:
-        viz = vizc.CamVisualizer()   
+    #if visualize:
+    #    viz = vizc.CamVisualizer()   
     
     # Train network
     if have_wandb and (comm_rank == 0):
@@ -356,27 +356,27 @@ def main(pargs):
                 scheduler.step()
 
             #visualize if requested
-            if (step % pargs.training_visualization_frequency == 0) and (comm_rank == 0):
-                # Compute predictions
-                predictions = torch.max(outputs, 1)[1]
-                
-                # extract sample id and data tensors
-                sample_idx = np.random.randint(low=0, high=label.shape[0])
-                plot_input = inputs.detach()[sample_idx, 0,...].cpu().numpy()
-                plot_prediction = predictions.detach()[sample_idx,...].cpu().numpy()
-                plot_label = label.detach()[sample_idx,...].cpu().numpy()
-                
-                # create filenames
-                outputfile = os.path.basename(filename[sample_idx]).replace("data-", "training-").replace(".h5", ".png")
-                outputfile = os.path.join(plot_dir, outputfile)
-                
-                # plot
-                viz.plot(filename[sample_idx], outputfile, plot_input, plot_prediction, plot_label)
-                
-                #log if requested
-                if have_wandb:
-                    img = Image.open(outputfile)
-                    wandb.log({"train_examples": [wandb.Image(img, caption="Prediction vs. Ground Truth")]}, step = step)
+            #if (step % pargs.training_visualization_frequency == 0) and (comm_rank == 0):
+            #    # Compute predictions
+            #    predictions = torch.max(outputs, 1)[1]
+            #    
+            #    # extract sample id and data tensors
+            #    sample_idx = np.random.randint(low=0, high=label.shape[0])
+            #    plot_input = inputs.detach()[sample_idx, 0,...].cpu().numpy()
+            #    plot_prediction = predictions.detach()[sample_idx,...].cpu().numpy()
+            #    plot_label = label.detach()[sample_idx,...].cpu().numpy()
+            #    
+            #    # create filenames
+            #    outputfile = os.path.basename(filename[sample_idx]).replace("data-", "training-").replace(".h5", ".png")
+            #    outputfile = os.path.join(plot_dir, outputfile)
+            #    
+            #    # plot
+            #    viz.plot(filename[sample_idx], outputfile, plot_input, plot_prediction, plot_label)
+            #    
+            #    #log if requested
+            #    if have_wandb:
+            #        img = Image.open(outputfile)
+            #        wandb.log({"train_examples": [wandb.Image(img, caption="Prediction vs. Ground Truth")]}, step = step)
             
             
             #log if requested
@@ -443,25 +443,25 @@ def main(pargs):
                         iou_sum_val += iou_val
 
                         # Visualize
-                        if (step_val % pargs.validation_visualization_frequency == 0) and (not visualized) and (comm_rank == 0):
-                            #extract sample id and data tensors
-                            sample_idx = np.random.randint(low=0, high=label_val.shape[0])
-                            plot_input = inputs_val.detach()[sample_idx, 0,...].cpu().numpy()
-                            plot_prediction = predictions_val.detach()[sample_idx,...].cpu().numpy()
-                            plot_label = label_val.detach()[sample_idx,...].cpu().numpy()
-                            
-                            #create filenames
-                            outputfile = os.path.basename(filename[sample_idx]).replace("data-", "validation-").replace(".h5", ".png")
-                            outputfile = os.path.join(plot_dir, outputfile)
-                            
-                            #plot
-                            viz.plot(filename[sample_idx], outputfile, plot_input, plot_prediction, plot_label)
-                            visualized = True
-                            
-                            #log if requested
-                            if have_wandb:
-                                img = Image.open(outputfile)
-                                wandb.log({"eval_examples": [wandb.Image(img, caption="Prediction vs. Ground Truth")]}, step = step)
+                        #if (step_val % pargs.validation_visualization_frequency == 0) and (not visualized) and (comm_rank == 0):
+                        #    #extract sample id and data tensors
+                        #    sample_idx = np.random.randint(low=0, high=label_val.shape[0])
+                        #    plot_input = inputs_val.detach()[sample_idx, 0,...].cpu().numpy()
+                        #    plot_prediction = predictions_val.detach()[sample_idx,...].cpu().numpy()
+                        #    plot_label = label_val.detach()[sample_idx,...].cpu().numpy()
+                        #    
+                        #    #create filenames
+                        #    outputfile = os.path.basename(filename[sample_idx]).replace("data-", "validation-").replace(".h5", ".png")
+                        #    outputfile = os.path.join(plot_dir, outputfile)
+                        #    
+                        #    #plot
+                        #    viz.plot(filename[sample_idx], outputfile, plot_input, plot_prediction, plot_label)
+                        #    visualized = True
+                        #    
+                        #    #log if requested
+                        #    if have_wandb:
+                        #        img = Image.open(outputfile)
+                        #        wandb.log({"eval_examples": [wandb.Image(img, caption="Prediction vs. Ground Truth")]}, step = step)
                         
                         #increase eval step counter
                         step_val += 1
