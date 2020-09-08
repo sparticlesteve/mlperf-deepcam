@@ -3,7 +3,8 @@
 #SBATCH -C knl
 #SBATCH -q regular
 #SBATCH -t 08:00:00
-#SBATCH -S 2
+
+##SBATCH -S 2
 
 # The MIT License (MIT)
 #
@@ -28,11 +29,15 @@
 
 # Setup software
 module load pytorch/v1.6.0
+export KMP_AFFINITY="granularity=fine,compact,1,0"
+export KMP_BLOCKTIME=1
+export OMP_NUM_THREADS=272
 
 # Job configuration
 rankspernode=1
 totalranks=$(( ${SLURM_NNODES} * ${rankspernode} ))
-run_tag="deepcam_cori_000"
+cpuspertask=$(( 272 / $rankspernode )) #$(( 256 / $rankspernode ))
+run_tag="deepcam_cori_001"
 data_dir_prefix="/global/cscratch1/sd/tkurth/data/cam5_data/All-Hist"
 output_dir=$SCRATCH/deepcam/results/$run_tag
 
@@ -41,26 +46,29 @@ mkdir -p ${output_dir}
 touch ${output_dir}/train.out
 
 # Run training
-srun -u -N ${SLURM_NNODES} -n ${totalranks} -c $(( 256 / ${rankspernode} )) --cpu_bind=cores \
+#--cpu_bind=cores
+srun -u -N ${SLURM_NNODES} -n ${totalranks} -c $cpuspertask \
      python ../train_hdf5_ddp.py \
      --wireup_method "mpi" \
      --run_tag ${run_tag} \
      --data_dir_prefix ${data_dir_prefix} \
      --output_dir ${output_dir} \
-     --max_inter_threads 2 \
+     --max_inter_threads 0 \
      --model_prefix "classifier" \
      --optimizer "AdamW" \
      --start_lr 1e-3 \
-     --lr_schedule type="multistep",milestones="15000 25000",decay_rate="0.1" \
+     --lr_schedule type="multistep",milestones="8192 16384",decay_rate="0.1" \
      --lr_warmup_steps 0 \
      --lr_warmup_factor $(( ${SLURM_NNODES} / 8 )) \
      --weight_decay 1e-2 \
      --validation_frequency 200 \
-     --training_visualization_frequency 200 \
-     --validation_visualization_frequency 40 \
-     --max_validation_steps 50 \
-     --logging_frequency 0 \
+     --training_visualization_frequency 0 \
+     --validation_visualization_frequency 0 \
+     --logging_frequency 1 \
      --save_frequency 400 \
      --max_epochs 200 \
-     --amp_opt_level O1 \
+     --amp_opt_level O0 \
+     --enable_wandb \
+     --wandb_certdir $HOME \
      --local_batch_size 2 |& tee -a ${output_dir}/train.out
+     #--max_validation_steps 50 \

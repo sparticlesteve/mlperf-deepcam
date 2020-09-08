@@ -10,15 +10,11 @@
 # Setup software environment
 module load cgpu
 module load pytorch/v1.6.0-gpu
-#conda activate mlperf_deepcam
-#module load pytorch/v1.4.0
-#export PROJ_LIB=/global/homes/t/tkurth/.conda/envs/mlperf_deepcam/share/basemap
-#export PYTHONPATH=/global/homes/t/tkurth/.conda/envs/mlperf_deepcam/lib/python3.7/site-packages:${PYTHONPATH}
 
 # Job configuration
 rankspernode=8
 totalranks=$(( ${SLURM_NNODES} * ${rankspernode} ))
-run_tag="deepcam_004"
+run_tag="deepcam_007"
 data_dir_prefix="/global/cscratch1/sd/tkurth/data/cam5_data/All-Hist"
 output_dir=$SCRATCH/deepcam/results/$run_tag
 
@@ -33,13 +29,13 @@ srun -u -N ${SLURM_NNODES} -n ${totalranks} -c $(( 80 / ${rankspernode} )) --cpu
      --run_tag ${run_tag} \
      --data_dir_prefix ${data_dir_prefix} \
      --output_dir ${output_dir} \
-     --max_inter_threads 0 \
+     --max_inter_threads 2 \
      --model_prefix "classifier" \
      --optimizer "LAMB" \
-     --start_lr 1e-4 \
-     --lr_schedule type="multistep",milestones="8192 16384",decay_rate="0.1" \
-     --lr_warmup_steps 1024 \
-     --lr_warmup_factor 16. \
+     --start_lr 2e-3 \
+     --lr_schedule type="multistep",milestones="4096 8192",decay_rate="0.1" \
+     --lr_warmup_steps 0 \
+     --lr_warmup_factor 1. \
      --weight_decay 1e-2 \
      --validation_frequency 200 \
      --training_visualization_frequency 0 \
