@@ -120,6 +120,9 @@ def main(pargs):
         torch.cuda.manual_seed(seed)
         #necessary for AMP to work
         torch.cuda.set_device(device)
+
+        # TEST: allowed? Valuable?
+        #torch.backends.cudnn.benchark = True
     else:
         device = torch.device("cpu")
 
@@ -403,6 +406,7 @@ def main(pargs):
                     wandb.log({"train_loss": loss_avg.item() / float(comm_size)}, step = step)
                     wandb.log({"train_accuracy": iou_avg.item() / float(comm_size)}, step = step)
                     wandb.log({"learning_rate": current_lr}, step = step)
+                    wandb.log({"epoch": epoch+1}, step=step)
 
             
             # validation step if desired
