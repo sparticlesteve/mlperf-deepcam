@@ -14,7 +14,7 @@ module load pytorch/v1.6.0-gpu
 # Job configuration
 rankspernode=8
 totalranks=$(( ${SLURM_NNODES} * ${rankspernode} ))
-run_tag="deepcam_007"
+run_tag="deepcam_005"
 data_dir_prefix="/global/cscratch1/sd/tkurth/data/cam5_data/All-Hist"
 output_dir=$SCRATCH/deepcam/results/$run_tag
 
@@ -32,8 +32,8 @@ srun -u -N ${SLURM_NNODES} -n ${totalranks} -c $(( 80 / ${rankspernode} )) --cpu
      --max_inter_threads 2 \
      --model_prefix "classifier" \
      --optimizer "LAMB" \
-     --start_lr 2e-3 \
-     --lr_schedule type="multistep",milestones="4096 8192",decay_rate="0.1" \
+     --start_lr 1e-3 \
+     --lr_schedule type="multistep",milestones="8192 16384",decay_rate="0.1" \
      --lr_warmup_steps 0 \
      --lr_warmup_factor 1. \
      --weight_decay 1e-2 \
