@@ -186,9 +186,13 @@ def main(pargs):
                     config.update({"lr_schedule_"+key: pargs.lr_schedule[key]}, allow_val_change = True)
 
 
-    # initial logging
+    # Logging hyperparameters
     logger.log_event(key = "global_batch_size", value = (pargs.local_batch_size * comm_size))
-    logger.log_event(key = "optimizer", value = pargs.optimizer)
+    logger.log_event(key = "opt_name", value = pargs.optimizer)
+    logger.log_event(key = "opt_base_learning_rate", value = pargs.start_lr * pargs.lr_warmup_factor)
+    logger.log_event(key = "opt_learning_rate_warmup_steps", value = pargs.lr_warmup_steps)
+    logger.log_event(key = "opt_learning_rate_warmup_factor", value = pargs.lr_warmup_factor)
+    logger.log_event(key = "opt_epsilon", value = pargs.adam_eps)
 
     # Define architecture
     n_input_channels = len(pargs.channels)
@@ -244,11 +248,20 @@ def main(pargs):
     if pargs.lr_schedule:
         scheduler_after = ph.get_lr_schedule(pargs.start_lr, pargs.lr_schedule, optimizer, last_step = start_step)
 
-        if have_warmup_scheduler and (pargs.lr_warmup_steps > 0):
-            scheduler = GradualWarmupScheduler(optimizer, multiplier=pargs.lr_warmup_factor, total_epoch=pargs.lr_warmup_steps, after_scheduler=scheduler_after)
+        # LR warmup
+        if pargs.lr_warmup_steps > 0:
+            if have_warmup_scheduler:
+                scheduler = GradualWarmupScheduler(optimizer, multiplier=pargs.lr_warmup_factor,
+                                                   total_epoch=pargs.lr_warmup_steps,
+                                                   after_scheduler=scheduler_after)
+            # Throw an error if the package is not found
+            else:
+                raise Exception(f'Requested {pargs.lr_warmup_steps} LR warmup steps '
+                                'but warmup scheduler not found. Install it from '
+                                'https://github.com/ildoonet/pytorch-gradual-warmup-lr')
         else:
             scheduler = scheduler_after
-        
+
     #broadcast model and optimizer state
     steptens = torch.tensor(np.array([start_step, start_epoch]), requires_grad=False).to(device)
     dist.broadcast(steptens, src = 0)
@@ -318,6 +331,7 @@ def main(pargs):
     step = start_step
     epoch = start_epoch
     current_lr = pargs.start_lr if not pargs.lr_schedule else scheduler.get_last_lr()[0]
+    stop_training = False
     net.train()
 
     # start trining
@@ -477,9 +491,9 @@ def main(pargs):
                             break
                         
                 # average the validation loss
-                dist.reduce(count_sum_val, dst=0, op=dist.ReduceOp.SUM)
-                dist.reduce(loss_sum_val, dst=0, op=dist.ReduceOp.SUM)
-                dist.reduce(iou_sum_val, dst=0, op=dist.ReduceOp.SUM)
+                dist.all_reduce(count_sum_val, op=dist.ReduceOp.SUM)
+                dist.all_reduce(loss_sum_val, op=dist.ReduceOp.SUM)
+                dist.all_reduce(iou_sum_val, op=dist.ReduceOp.SUM)
                 loss_avg_val = loss_sum_val.item() / count_sum_val.item()
                 iou_avg_val = iou_sum_val.item() / count_sum_val.item()
                 
@@ -494,6 +508,7 @@ def main(pargs):
 
                 if (iou_avg_val >= pargs.target_iou):
                     logger.log_event(key = "target_accuracy_reached", value = pargs.target_iou, metadata = {'epoch_num': epoch+1, 'step_num': step})
+                    stop_training = True
 
                 # set to train
                 net.train()
@@ -514,18 +529,22 @@ def main(pargs):
                         checkpoint['amp'] = amp.state_dict()
                     torch.save(checkpoint, os.path.join(output_dir, pargs.model_prefix + "_step_" + str(step) + ".cpt") )
                 logger.log_end(key = "save_stop", metadata = {'epoch_num': epoch+1, 'step_num': step}, sync = True)
+
+            # Stop training?
+            if stop_training:
+                break
             
         # log the epoch
         logger.log_end(key = "epoch_stop", metadata = {'epoch_num': epoch+1, 'step_num': step}, sync = True)
         epoch += 1
         
         # are we done?
-        if epoch >= pargs.max_epochs:
+        if epoch >= pargs.max_epochs or stop_training:
             break
 
     # run done
     logger.log_end(key = "run_stop", sync = True, metadata = {'status' : 'success'})
-    
+
 
 if __name__ == "__main__":
 
