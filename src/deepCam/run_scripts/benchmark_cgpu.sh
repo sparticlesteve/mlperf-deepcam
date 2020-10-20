@@ -34,11 +34,11 @@ srun -u -N ${SLURM_NNODES} -n ${totalranks} -c $(( 80 / ${rankspernode} )) --cpu
      --max_inter_threads 2 \
      --optimizer "LAMB" \
      --start_lr 1e-3 \
-     --validation_frequency 200 \
+     --validation_frequency 256 \
      --training_visualization_frequency 0 \
      --validation_visualization_frequency 0 \
-     --logging_frequency 10 \
-     --save_frequency 400 \
+     --logging_frequency 16 \
+     --save_frequency 256 \
      --max_epochs $epochs \
      --amp_opt_level O1 \
      --local_batch_size 2 |& tee -a ${output_dir}/train.out
