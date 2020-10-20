@@ -101,6 +101,8 @@ def main(pargs):
     comm_rank = comm.get_rank()
     comm_local_rank = comm.get_local_rank()
     comm_size = comm.get_size()
+    if comm_rank == 0:
+        print('Number of workers:', comm_size)
 
     # set up logging
     pargs.logging_frequency = max([pargs.logging_frequency, 1])
