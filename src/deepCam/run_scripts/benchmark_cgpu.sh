@@ -17,6 +17,9 @@ run_tag="deepcam_${SLURM_JOB_ID}"
 data_dir_prefix="/global/cscratch1/sd/sfarrell/deepcam/data/n10-benchmark-data/data-replicated"
 output_dir=$SCRATCH/deepcam/results/$run_tag
 
+# Scale number of epochs according to the number of nodes
+epochs=$SLURM_JOB_NUM_NODES
+
 # Create files
 mkdir -p ${output_dir}
 touch ${output_dir}/train.out
@@ -36,6 +39,6 @@ srun -u -N ${SLURM_NNODES} -n ${totalranks} -c $(( 80 / ${rankspernode} )) --cpu
      --validation_visualization_frequency 0 \
      --logging_frequency 10 \
      --save_frequency 400 \
-     --max_epochs 1 \
+     --max_epochs $epochs \
      --amp_opt_level O1 \
      --local_batch_size 2 |& tee -a ${output_dir}/train.out
