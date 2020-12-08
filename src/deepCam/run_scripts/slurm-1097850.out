@@ -1,0 +1,101 @@
+Number of workers: 8
+:::MLLOG {"namespace": "", "time_ms": 1603224065510, "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "deepcam", "metadata": {"file": "/global/u2/s/sfarrell/WorkAreas/benchmarks/deepcam-n10/src/deepCam/utils/mlperf_log_utils.py", "lineno": 56}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065689, "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "Umbrella Corp.", "metadata": {"file": "/global/u2/s/sfarrell/WorkAreas/benchmarks/deepcam-n10/src/deepCam/utils/mlperf_log_utils.py", "lineno": 59}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065689, "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "closed", "metadata": {"file": "/global/u2/s/sfarrell/WorkAreas/benchmarks/deepcam-n10/src/deepCam/utils/mlperf_log_utils.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065690, "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "onprem", "metadata": {"file": "/global/u2/s/sfarrell/WorkAreas/benchmarks/deepcam-n10/src/deepCam/utils/mlperf_log_utils.py", "lineno": 65}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065690, "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "8xSUBMISSION_PLATFORM_PLACEHOLDER", "metadata": {"file": "/global/u2/s/sfarrell/WorkAreas/benchmarks/deepcam-n10/src/deepCam/utils/mlperf_log_utils.py", "lineno": 68}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065690, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 111}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065690, "event_type": "POINT_IN_TIME", "key": "cache_clear", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 112}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065690, "event_type": "POINT_IN_TIME", "key": "seed", "value": 333, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 116}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065702, "event_type": "POINT_IN_TIME", "key": "global_batch_size", "value": 16, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 192}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065702, "event_type": "POINT_IN_TIME", "key": "opt_name", "value": "LAMB", "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 193}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065702, "event_type": "POINT_IN_TIME", "key": "opt_base_learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 194}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065702, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_warmup_steps", "value": 0, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 195}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065702, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_warmup_factor", "value": 1.0, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 196}}
+:::MLLOG {"namespace": "", "time_ms": 1603224065703, "event_type": "POINT_IN_TIME", "key": "opt_epsilon", "value": 1e-08, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 197}}
+Constructing DeepLabv3+ model...
+Number of output channels: 3
+Output stride: 16
+Number of Input Channels: 16
+Selected optimization level O1:  Insert automatic casts around Pytorch functions and Tensor methods.
+
+Defaults for this optimization level are:
+enabled                : True
+opt_level              : O1
+cast_model_type        : None
+patch_torch_functions  : True
+keep_batchnorm_fp32    : None
+master_weights         : None
+loss_scale             : dynamic
+Processing user overrides (additional kwargs that are not None)...
+After processing overrides, optimization options are:
+enabled                : True
+opt_level              : O1
+cast_model_type        : None
+patch_torch_functions  : True
+keep_batchnorm_fp32    : None
+master_weights         : None
+loss_scale             : dynamic
+Initialized dataset with  4096  samples.
+Initialized dataset with  4096  samples.
+:::MLLOG {"namespace": "", "time_ms": 1603224066899, "event_type": "POINT_IN_TIME", "key": "train_samples", "value": 4096, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 314}}
+:::MLLOG {"namespace": "", "time_ms": 1603224066900, "event_type": "POINT_IN_TIME", "key": "eval_samples", "value": 4096, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 319}}
+:::MLLOG {"namespace": "", "time_ms": 1603224066936, "event_type": "INTERVAL_END", "key": "init_stop", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 340}}
+:::MLLOG {"namespace": "", "time_ms": 1603224066936, "event_type": "INTERVAL_START", "key": "run_start", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 341}}
+:::MLLOG {"namespace": "", "time_ms": 1603224066936, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 347, "epoch_num": 1, "step_num": 0}}
+:::MLLOG {"namespace": "", "time_ms": 1603224078566, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 16}}
+:::MLLOG {"namespace": "", "time_ms": 1603224078567, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.30557167530059814, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 16}}
+:::MLLOG {"namespace": "", "time_ms": 1603224078567, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.502204418182373, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 16}}
+:::MLLOG {"namespace": "", "time_ms": 1603224085986, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1603224085987, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.3285929560661316, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1603224085987, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.17460604012012482, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1603224093619, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1603224093620, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.33645346760749817, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1603224093620, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.09436807036399841, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1603224100807, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1603224100807, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.3944864273071289, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1603224100808, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.05165219306945801, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1603224108182, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 80}}
+:::MLLOG {"namespace": "", "time_ms": 1603224108183, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.44897377490997314, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 80}}
+:::MLLOG {"namespace": "", "time_ms": 1603224108183, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.041611842811107635, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 80}}
+:::MLLOG {"namespace": "", "time_ms": 1603224116326, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 96}}
+:::MLLOG {"namespace": "", "time_ms": 1603224116327, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.4703531265258789, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 96}}
+:::MLLOG {"namespace": "", "time_ms": 1603224116328, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.04279119148850441, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 96}}
+:::MLLOG {"namespace": "", "time_ms": 1603224123597, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 112}}
+:::MLLOG {"namespace": "", "time_ms": 1603224123597, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.49029839038848877, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 112}}
+:::MLLOG {"namespace": "", "time_ms": 1603224123597, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.03385451063513756, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 112}}
+:::MLLOG {"namespace": "", "time_ms": 1603224131517, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 128}}
+:::MLLOG {"namespace": "", "time_ms": 1603224131517, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.514858067035675, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 128}}
+:::MLLOG {"namespace": "", "time_ms": 1603224131518, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.02929563820362091, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 128}}
+:::MLLOG {"namespace": "", "time_ms": 1603224138528, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 144}}
+:::MLLOG {"namespace": "", "time_ms": 1603224138528, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.5422433614730835, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 144}}
+:::MLLOG {"namespace": "", "time_ms": 1603224138529, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.030549364164471626, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 144}}
+:::MLLOG {"namespace": "", "time_ms": 1603224146724, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 160}}
+:::MLLOG {"namespace": "", "time_ms": 1603224146725, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.5468155741691589, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 160}}
+:::MLLOG {"namespace": "", "time_ms": 1603224146725, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.026486201211810112, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 160}}
+:::MLLOG {"namespace": "", "time_ms": 1603224154473, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 176}}
+:::MLLOG {"namespace": "", "time_ms": 1603224154474, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.6019930839538574, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 176}}
+:::MLLOG {"namespace": "", "time_ms": 1603224154474, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.02267993986606598, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 176}}
+:::MLLOG {"namespace": "", "time_ms": 1603224160818, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 192}}
+:::MLLOG {"namespace": "", "time_ms": 1603224160819, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.6685880422592163, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 192}}
+:::MLLOG {"namespace": "", "time_ms": 1603224160819, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.021276794373989105, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 192}}
+:::MLLOG {"namespace": "", "time_ms": 1603224168598, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 208}}
+:::MLLOG {"namespace": "", "time_ms": 1603224168598, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.6245414018630981, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 208}}
+:::MLLOG {"namespace": "", "time_ms": 1603224168598, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.018793905153870583, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 208}}
+:::MLLOG {"namespace": "", "time_ms": 1603224177467, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 224}}
+:::MLLOG {"namespace": "", "time_ms": 1603224177468, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.7015026807785034, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 224}}
+:::MLLOG {"namespace": "", "time_ms": 1603224177468, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.01750143989920616, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 224}}
+:::MLLOG {"namespace": "", "time_ms": 1603224184697, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 240}}
+:::MLLOG {"namespace": "", "time_ms": 1603224184698, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.6862614154815674, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 240}}
+:::MLLOG {"namespace": "", "time_ms": 1603224184698, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.01660471223294735, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 240}}
+:::MLLOG {"namespace": "", "time_ms": 1603224192265, "event_type": "POINT_IN_TIME", "key": "learning_rate", "value": 0.001, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 417, "epoch_num": 1, "step_num": 256}}
+:::MLLOG {"namespace": "", "time_ms": 1603224192266, "event_type": "POINT_IN_TIME", "key": "train_accuracy", "value": 0.7038040161132812, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 418, "epoch_num": 1, "step_num": 256}}
+:::MLLOG {"namespace": "", "time_ms": 1603224192266, "event_type": "POINT_IN_TIME", "key": "train_loss", "value": 0.015851063653826714, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 419, "epoch_num": 1, "step_num": 256}}
+:::MLLOG {"namespace": "", "time_ms": 1603224192266, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 431, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1603224310981, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.6311885714530945, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 503, "epoch_num": 1, "step_num": 256}}
+:::MLLOG {"namespace": "", "time_ms": 1603224310982, "event_type": "POINT_IN_TIME", "key": "eval_loss", "value": 0.020584432408213615, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 504, "epoch_num": 1, "step_num": 256}}
+:::MLLOG {"namespace": "", "time_ms": 1603224310984, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 518, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1603224310984, "event_type": "INTERVAL_START", "key": "save_start", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 522, "epoch_num": 1, "step_num": 256}}
+:::MLLOG {"namespace": "", "time_ms": 1603224312291, "event_type": "INTERVAL_END", "key": "save_stop", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 533, "epoch_num": 1, "step_num": 256}}
+:::MLLOG {"namespace": "", "time_ms": 1603224312372, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 540, "epoch_num": 1, "step_num": 256}}
+:::MLLOG {"namespace": "", "time_ms": 1603224312373, "event_type": "INTERVAL_END", "key": "run_stop", "value": null, "metadata": {"file": "../train_hdf5_ddp.py", "lineno": 548, "status": "success"}}
