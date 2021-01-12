@@ -65,15 +65,18 @@ except ImportError:
 from PIL import Image
 #from utils import visualizer as vizc
 
-#DDP
+# PyTorch distributed and AMP
 import torch.distributed as dist
+from torch.nn.parallel.distributed import DistributedDataParallel as DDP
+from torch.cuda import amp
+
+# Nvidia Apex
 try:
-    from apex import amp
+    from apex import amp as apex_amp
     import apex.optimizers as aoptim
-    from apex.parallel import DistributedDataParallel as DDP
+    from apex.parallel import DistributedDataParallel as ApexDDP
     have_apex = True
 except ImportError:
-    from torch.nn.parallel.distributed import DistributedDataParallel as DDP
     have_apex = False
 
 #comm wrapper
@@ -224,12 +227,18 @@ def main(pargs):
     else:
         raise NotImplementedError("Error, optimizer {} not supported".format(pargs.optimizer))
 
-    if have_apex:
+    if have_apex and pargs.use_apex_amp:
         #wrap model and opt into amp
-        net, optimizer = amp.initialize(net, optimizer, opt_level = pargs.amp_opt_level)
+        net, optimizer = apex_amp.initialize(net, optimizer, opt_level = pargs.amp_opt_level)
+
+    # AMP gradient scaler
+    scaler = amp.GradScaler(enabled=pargs.enable_amp)
     
-    #make model distributed
-    net = DDP(net)
+    # Wrap model for data-parallel training
+    if have_apex and pargs.use_apex_ddp:
+        net = ApexDDP(net)
+    else:
+        net = DDP(net, device_ids=[device])
 
     #restart from checkpoint if desired
     #if (comm_rank == 0) and (pargs.checkpoint):
@@ -240,7 +249,8 @@ def main(pargs):
         start_epoch = checkpoint['epoch']
         optimizer.load_state_dict(checkpoint['optimizer'])
         net.load_state_dict(checkpoint['model'])
-        if have_apex:
+        scaler.load_state_dict(checkpoint['scaler'])
+        if have_apex and pargs.use_apex_amp:
             amp.load_state_dict(checkpoint['amp'])
     else:
         start_step = 0
@@ -352,21 +362,27 @@ def main(pargs):
             # send to device
             inputs = inputs.to(device)
             label = label.to(device)
+
+            # Automatic mixed precision
+            with amp.autocast(enabled=pargs.enable_amp):
             
-            # forward pass
-            outputs = net.forward(inputs)
+                # forward pass
+                outputs = net.forward(inputs)
             
-            # Compute loss and average across nodes
-            loss = criterion(outputs, label, weight=class_weights, fpw_1=fpw_1, fpw_2=fpw_2)
+                # Compute loss and average across nodes
+                loss = criterion(outputs, label, weight=class_weights,
+                                 fpw_1=fpw_1, fpw_2=fpw_2)
             
             # Backprop
             optimizer.zero_grad()
-            if have_apex:
+            if have_apex and pargs.use_apex_amp:
                 with amp.scale_loss(loss, optimizer) as scaled_loss:
                     scaled_loss.backward()
+                optimizer.step()
             else:
-                loss.backward()
-            optimizer.step()
+                scaler.scale(loss).backward()
+                scaler.step(optimizer)
+                scaler.update()
 
             # step counter
             step += 1
@@ -525,9 +541,10 @@ def main(pargs):
                         'step': step,
                         'epoch': epoch,
                         'model': net.state_dict(),
-                        'optimizer': optimizer.state_dict()
+                        'optimizer': optimizer.state_dict(),
+                        'scaler': scaler.state_dict()
 		    }
-                    if have_apex:
+                    if have_apex and pargs.use_apex_amp:
                         checkpoint['amp'] = amp.state_dict()
                     torch.save(checkpoint, os.path.join(output_dir, pargs.model_prefix + "_step_" + str(step) + ".cpt") )
                 logger.log_end(key = "save_stop", metadata = {'epoch_num': epoch+1, 'step_num': step}, sync = True)
@@ -579,6 +596,9 @@ if __name__ == "__main__":
     AP.add_argument("--target_iou", type=float, default=0.82, help="Target IoU score.")
     AP.add_argument("--model_prefix", type=str, default="model", help="Prefix for the stored model")
     AP.add_argument("--amp_opt_level", type=str, default="O0", help="AMP optimization level")
+    AP.add_argument("--enable_amp", action='store_true', help='Enable pytorch native AMP')
+    AP.add_argument("--use_apex_amp", action='store_true', help='Enable Apex AMP')
+    AP.add_argument("--use_apex_ddp", action='store_true', help='Use DDP from Apex')
     AP.add_argument("--enable_wandb", action='store_true')
     AP.add_argument("--resume_logging", action='store_true')
     pargs = AP.parse_args()
