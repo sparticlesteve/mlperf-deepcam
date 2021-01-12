@@ -65,15 +65,17 @@ except ImportError:
 from PIL import Image
 #from utils import visualizer as vizc
 
-#DDP
+# PyTorch distributed and AMP
 import torch.distributed as dist
+from torch.nn.parallel.distributed import DistributedDataParallel as DDP
+
+# Nvidia Apex
 try:
     from apex import amp
     import apex.optimizers as aoptim
-    from apex.parallel import DistributedDataParallel as DDP
+    from apex.parallel import DistributedDataParallel as ApexDDP
     have_apex = True
 except ImportError:
-    from torch.nn.parallel.distributed import DistributedDataParallel as DDP
     have_apex = False
 
 #comm wrapper
@@ -228,8 +230,11 @@ def main(pargs):
         #wrap model and opt into amp
         net, optimizer = amp.initialize(net, optimizer, opt_level = pargs.amp_opt_level)
     
-    #make model distributed
-    net = DDP(net)
+    # Wrap model for data-parallel training
+    if have_apex and pargs.use_apex_ddp:
+        net = ApexDDP(net)
+    else:
+        net = DDP(net, device_ids=[device])
 
     #restart from checkpoint if desired
     #if (comm_rank == 0) and (pargs.checkpoint):
@@ -579,6 +584,7 @@ if __name__ == "__main__":
     AP.add_argument("--target_iou", type=float, default=0.82, help="Target IoU score.")
     AP.add_argument("--model_prefix", type=str, default="model", help="Prefix for the stored model")
     AP.add_argument("--amp_opt_level", type=str, default="O0", help="AMP optimization level")
+    AP.add_argument("--use_apex_ddp", action='store_true', help='Use DDP from Apex')
     AP.add_argument("--enable_wandb", action='store_true')
     AP.add_argument("--resume_logging", action='store_true')
     pargs = AP.parse_args()
