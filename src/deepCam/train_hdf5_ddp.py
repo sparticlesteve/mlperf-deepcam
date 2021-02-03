@@ -565,7 +565,7 @@ def main(pargs):
     logger.log_end(key = "run_stop", sync = True, metadata = {'status' : 'success'})
 
     # Print maximum memory consumed on the GPU
-    print('CUDA max mem: %.4f GiB', torch.cuda.max_memory_allocated / 1024 / 1024 / 1024)
+    print('CUDA max mem: %.4f GiB', torch.cuda.max_memory_allocated() / 1024 / 1024 / 1024)
 
 
 if __name__ == "__main__":
