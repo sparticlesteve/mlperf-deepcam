@@ -238,7 +238,8 @@ def main(pargs):
     if have_apex and pargs.use_apex_ddp:
         net = ApexDDP(net)
     else:
-        net = DDP(net, device_ids=[device])
+        device_ids = [device] if torch.cuda.is_available() else None
+        net = DDP(net, device_ids=device_ids)
 
     #restart from checkpoint if desired
     #if (comm_rank == 0) and (pargs.checkpoint):
