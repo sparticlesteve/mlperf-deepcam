@@ -4,15 +4,13 @@
 #SBATCH --ntasks-per-node 8
 #SBATCH --gpus-per-task 1
 #SBATCH --cpus-per-task 10
-#SBATCH --time 4:00:00
+#SBATCH --time 30
 
 # Setup software environment
 module load cgpu
 module load pytorch/v1.6.0-gpu
 
 # Job configuration
-rankspernode=8
-totalranks=$(( ${SLURM_NNODES} * ${rankspernode} ))
 run_tag="deepcam_${SLURM_JOB_ID}"
 data_dir_prefix="/global/cscratch1/sd/sfarrell/deepcam/data/n10-benchmark-data/data-replicated"
 output_dir=$SCRATCH/deepcam/results/$run_tag
@@ -25,7 +23,7 @@ mkdir -p ${output_dir}
 touch ${output_dir}/train.out
 
 # Run training
-srun -u -N ${SLURM_NNODES} -n ${totalranks} -c $(( 80 / ${rankspernode} )) --cpu_bind=cores \
+srun -u --cpu_bind=cores \
      python ../train_hdf5_ddp.py \
      --wireup_method "nccl-slurm" \
      --run_tag ${run_tag} \
