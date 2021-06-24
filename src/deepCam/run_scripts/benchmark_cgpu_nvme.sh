@@ -4,7 +4,7 @@
 #SBATCH --ntasks-per-node 8
 #SBATCH --gpus-per-task 1
 #SBATCH --cpus-per-task 10
-#SBATCH --time 30
+#SBATCH --time 1:30:00
 
 # Setup software environment
 module load cgpu
@@ -14,7 +14,7 @@ module load pytorch/v1.6.0-gpu
 rankspernode=8
 totalranks=$(( ${SLURM_NNODES} * ${rankspernode} ))
 run_tag="deepcam_${SLURM_JOB_ID}"
-output_dir=$SCRATCH/deepcam/results/$run_tag
+output_dir=/tmp/deepcam/results/$run_tag
 
 # 480 GB
 data_dir_prefix="/global/cscratch1/sd/sfarrell/deepcam/data/n10-benchmark-data/data-replicated"
@@ -28,6 +28,12 @@ epochs=$SLURM_JOB_NUM_NODES
 mkdir -p ${output_dir}
 touch ${output_dir}/train.out
 
+# Copy from VAST (must be already populated) which may be faster than cscratch.
+VAST_DIR="/vast/$USER/deepcam_$(basename $data_dir_prefix)"
+NVME_DIR="/tmp/${USER}_deepcam_$(basename $data_dir_prefix)"
+time rsync -aL "$VAST_DIR/" "$NVME_DIR/"
+
+data_dir_prefix="$NVME_DIR"
 echo "Input dir is '$data_dir_prefix'; content of dir:"; ls -l "$data_dir_prefix"
 
 # Run training
